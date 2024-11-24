@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Attendance System with QR Code</title>
+  <title>Student Attendance System</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Import the HTML5 QR Code library -->
-  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
   <div class="container">
     <h1>Student Attendance System</h1>
+    <form id="attendanceForm">
+      <label for="studentName">Student Name:</label>
+      <input type="text" id="studentName" placeholder="Enter student name" required>
 
-    <!-- QR Code Scanner Section -->
-    <div class="qr-section">
-      <h2>Scan QR Code</h2>
-      <div id="qr-reader" style="width: 300px;"></div>
-      <div id="qr-reader-results"></div>
-    </div>
+      <label for="studentId">Student ID:</label>
+      <input type="text" id="studentId" placeholder="Enter student ID" required>
+
+      <button type="submit">Mark Attendance</button>
+    </form>
     
     <h2>Attendance List</h2>
     <table id="attendanceTable">
