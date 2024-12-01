@@ -1,30 +1,55 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('attendanceForm');
-    const tableBody = document.querySelector('#attendanceTable tbody');
-  
-    form.addEventListener('submit', function(event) {
-      event.preventDefault();
-  
-      const studentName = document.getElementById('studentName').value;
-      const studentId = document.getElementById('studentId').value;
-  
-      if (studentName && studentId) {
-        const date = new Date();
-        const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-  
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-          <td>${studentId}</td>
-          <td>${studentName}</td>
-          <td>${formattedDate}</td>
-        `;
-  
-        tableBody.appendChild(newRow);
-  
-        // Clear the input fields after submission
-        document.getElementById('studentName').value = '';
-        document.getElementById('studentId').value = '';
-      }
-    });
+// Function to add an attendance record
+function addAttendance() {
+  const name = document.getElementById('studentName').value.trim();
+  const studentID = document.getElementById('studentID').value.trim();
+
+  if (name && studentID) {
+    const timestamp = new Date().toLocaleString();
+    const attendanceData = JSON.parse(localStorage.getItem('attendance')) || [];
+    attendanceData.push({ name, studentID, timestamp });
+    localStorage.setItem('attendance', JSON.stringify(attendanceData));
+    alert('Attendance added successfully!');
+    document.getElementById('attendanceForm').reset();
+  } else {
+    alert('Please fill in all fields.');
+  }
+}
+
+// Function to load attendance records
+function loadAttendance() {
+  const attendanceData = JSON.parse(localStorage.getItem('attendance')) || [];
+  const attendanceList = document.getElementById('attendanceList');
+
+  attendanceList.innerHTML = attendanceData.length
+    ? attendanceData
+        .map(
+          (item, index) => `
+            <div class="attendance-item">
+              <span>${item.name} (ID: ${item.studentID}) - ${item.timestamp}</span>
+              <button class="delete-btn" onclick="deleteAttendance(${index})">Delete</button>
+            </div>
+          `
+        )
+        .join('')
+    : '<p>No attendance records found.</p>';
+}
+
+// Function to delete an attendance record
+function deleteAttendance(index) {
+  const attendanceData = JSON.parse(localStorage.getItem('attendance')) || [];
+  attendanceData.splice(index, 1);
+  localStorage.setItem('attendance', JSON.stringify(attendanceData));
+  loadAttendance();
+}
+
+// Attach event listeners and initialize
+if (document.getElementById('attendanceForm')) {
+  document.getElementById('attendanceForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    addAttendance();
   });
-  
+}
+
+if (document.getElementById('attendanceList')) {
+  document.addEventListener('DOMContentLoaded', loadAttendance);
+}
